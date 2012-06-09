@@ -1,0 +1,111 @@
+#!/bin/bash
+
+# rsync backup studio
+# copyright Marios Andreopoulos 2009
+
+source=""
+destination_parent=""
+prefix=""
+exclude_file=""
+exclude_command=""
+mount_source_command=""
+umount_source_command=""
+mount_destination_parent_command=""
+umount_destination_parent_command=""
+
+
+
+# Check if configuration file exists
+if [ ! -f "$1" ]; then
+  echo "Configuration file not found. Exiting."
+  exit 1
+fi
+
+
+source "$1"
+
+# Test if destination_parent and prefix are given
+if [ -z "$destination_parent" ]; then
+  echo "No destination_parent folder given. Exiting."
+  exit 1
+fi
+if [ -z "$prefix" ]; then
+  echo "No prefix given. Exiting."
+  exit 1
+fi
+
+if [ ! -z "$mount_destination_parent_command" ]; then
+  echo "Mounting destination_parent."
+  if ! $mount_destination_parent_command >/dev/null 2>&1; then 
+    echo "Mount returned error. Exiting."
+    exit 1
+  fi
+fi
+
+
+# Test if destination_parent folder exists.
+if [ ! -d "$destination_parent" ]; then
+  echo "Target folder not found. Exiting"
+  exit 1
+fi
+
+
+recent="$(ls -td "$destination_parent/$prefix"* 2>/dev/null | sort -r | head -n1)"
+moment="$(date +%Y.%m.%d.%H%M)"
+
+if [ -z "$recent" ]; then 
+ # this is because next if checks if there is a $destination_parent/$recent. In case $recent is empty then it checks for $destination_parent and thinks it's ok
+ recent="aFilenameLikelyNotToExist7547hjknhDGVF"
+else
+ recent="$(basename "$recent")"
+fi
+ 
+if [ ! -d "$destination_parent/$recent" ]; then
+  echo "Did not found another valid backup. Creating new."
+else
+  echo "Most recent backup: $recent"
+  echo "Copying to $destination_parent/$prefix-$moment"
+  cp -al "$destination_parent/$recent" "$destination_parent/$prefix-$moment"
+fi
+
+
+
+if [ -z "$exclude_file" ]; then
+  echo "No excludes."
+elif [ ! -f "$exclude_file" ]; then
+  echo "Excludes file wrong. Exiting."
+  exit 1
+else
+  echo "Loading excludes."
+  exclude_command="--exclude-from=$exclude_file"
+fi
+
+if [ ! -z "$mount_source_command" ]; then
+  echo "Mounting source."
+  if ! $mount_source_command >/dev/null 2>&1; then
+    echo "Mount returned error. Exiting."
+    exit 1
+  fi
+fi
+
+if [ ! -d "$source" ]; then
+  echo "Source not found. Exiting."
+  exit 1
+fi
+
+echo "Rsyncing to $destination_parent/$prefix-$moment"
+rsync -a --stats -h --delete --delete-excluded $exclude_command "$source/" "$destination_parent/$prefix-$moment/"
+
+if [ ! -z "$umount_source_command" ]; then
+  echo "Umounting source."
+  if ! $umount_source_command >/dev/null 2>&1; then
+    echo "Umount source returned error."
+  fi
+fi
+
+if [ ! -z "$umount_destination_parent_command" ]; then
+  echo "Umounting destination_parent."
+  if ! $umount_destination_parent_command >/dev/null 2>&1; then
+    echo "Umount destination_parent returned error."
+  fi
+fi
