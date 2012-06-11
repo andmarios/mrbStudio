@@ -1,0 +1,4 @@
+source="/home"
+storage="/path/to/backup/directory/"
+prefix="Marios.home"
+exclude_file="home.excludes"
