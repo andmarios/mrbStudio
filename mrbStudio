@@ -3,6 +3,8 @@
 # rsync backup studio
 # copyright Marios Andreopoulos 2009
 
+# Changelog: added remote capability
+
 source=""
 destination_parent=""
 prefix=""
@@ -12,7 +14,8 @@ mount_source_command=""
 umount_source_command=""
 mount_destination_parent_command=""
 umount_destination_parent_command=""
-
+remote_shell=""
+remote_sync=""
 
 
 # Check if configuration file exists
@@ -88,13 +91,21 @@ if [ ! -z "$mount_source_command" ]; then
   fi
 fi
 
-if [ ! -d "$source" ]; then
-  echo "Source not found. Exiting."
-  exit 1
+if [ -z "$remote_shell" ]; then
+	if [ ! -d "$source" ]; then
+		echo "Source not found. Exiting."
+	exit 1
+	fi
+else
+	echo "Source is in remote machine. Skipping existance check".
 fi
 
 echo "Rsyncing to $destination_parent/$prefix-$moment"
-rsync -a --stats -h --delete --delete-excluded $exclude_command "$source/" "$destination_parent/$prefix-$moment/"
+if [ -z "$remote_shell" ]; then
+	rsync -a --stats -h --delete --delete-excluded $exclude_command $source/ "$destination_parent/$prefix-$moment/"
+else
+	rsync -a --stats -h -e "$remote_shell" --rsync-path="$remote_rsync" --delete --delete-excluded $exclude_command "$source/" "$destination_parent/$prefix-$moment/"
+fi
 
 if [ ! -z "$umount_source_command" ]; then
   echo "Umounting source."
