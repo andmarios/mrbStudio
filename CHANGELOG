@@ -1,0 +1,15 @@
+Changelog
+
+Version 3 - 2012, Jun ??:
+     - added btrfs snapshot support
+     - replaced cp -l with rsync --link-dest option (much faster for large filesystems)
+     - code restructure and clean up in order to release in public
+     - excluded files' list may be inside a main configuration file instead of a seperate file
+     - better documentation
+     - caution: this version changed the names of some variables, so older configuration files may need changes
+
+Version 2 - 2012, Jan 12:
+     - added versioned backup for remote linux systems through ssh and rsync
+
+Version 1 - 2009, Jun 30:
+     - versioned backup of local fileystems
