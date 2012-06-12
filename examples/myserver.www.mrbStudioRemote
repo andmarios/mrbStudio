@@ -1,5 +1,5 @@
 source="username@myserver:/var/www"
-storage="/path/to/backup/directory/"
+storage="/media/external_sd/backups/"
 prefix="Server.www"
 mount_source_command=""
 umount_source_command=""
@@ -7,3 +7,4 @@ mount_target_command=""
 umount_target_command=""
 remote_shell="ssh -p 10000"
 remote_rsync="sudo rsync"
+destination_fstype=btrfs

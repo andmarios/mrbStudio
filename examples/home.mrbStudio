@@ -1,4 +1,10 @@
 source="/home"
-storage="/path/to/backup/directory/"
+destination_parent="/media/external_disk/backups/"
 prefix="Marios.home"
 exclude_file="home.excludes"
+
+EXCLUDE_START
+/aUsername/torrents/*
+/bUsername/.aMule/*
+.kde/share/apps/nepomuk/*
+EXCLUDE_STOP

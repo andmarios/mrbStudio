@@ -1,8 +1,14 @@
 source="/mnt/backup"
-storage="/path/to/backup/directory/"
+destination_parent="/path/to/backup/directory/"
 prefix="Marios.root"
-exclude_file="root.excludes"
 mount_source_command="mount /dev/sdXY /mnt/backup"
 umount_source_command="umount /mnt/backup"
-mount_target_command=""
-umount_target_command=""
+mount_destination_parent_command=""
+umount_destination_parent_command=""
+destination_fstype=btrfs
+
+EXCLUDE_START
+/tmp/*
+/var/tmp/*
+/usr/src/*
+EXCLUDE_STOP

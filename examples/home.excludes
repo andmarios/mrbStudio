@@ -1,6 +1,3 @@
-/aUsername/torrents/*
-/bUsername/.aMule/*
-.kde/share/apps/nepomuk/*
 .gvfs
 cache-*
 socket-*

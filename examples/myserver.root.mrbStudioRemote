@@ -1,10 +1,13 @@
 source="username@myserver:/mnt/backup"
-storage="/path/to/backup/directory/"
+destination_parent="/path/to/backup/directory/"
 prefix="Server.root"
 exclude_file="root.excludes"
 mount_source_command="ssh -p 10000 username@myserver sudo mount /dev/sdXY /mnt/backup"
 umount_source_command="ssh -p 10000 username@myserver sudo umount /mnt/backup"
-mount_target_command=""
-umount_target_command=""
 remote_shell="ssh -p 10000"
 remote_rsync="sudo rsync"
+destination_fstype=btrfs
+
+EXCLUDE_START
+/usr/doc
+EXCLUDE_STOP
