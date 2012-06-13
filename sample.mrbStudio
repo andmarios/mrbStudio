@@ -1,5 +1,5 @@
 # Settings are either mandatory or optional.
-# Lines starting with hash are ignored.
+# Lines starting with hash and blank lines are ignored.
 # Order of parameters does not matter.
 # When this file is parsed, it is split to the variables and excludes parts respectively. The variables part
 # is then sourced by mrbStudio. The excludes part is treated as rsync/tar exclude list file.
@@ -43,7 +43,11 @@
 # Optional. System command to use to unmount the destination medium if needed.
 # umount_destination_command="umount /mnt/snapshots"
 
-destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used insted of hard links.
+# Optional. If set to btrfs (BTRFS, bTrFs, etc), btrfs snapshots will be used instead of hard links. Of course
+# your destination filesystem should be btrfs or mrbStudio will exit with error. Snapshots are quick to create
+# and quick to delete when you want to. Furthermore since btrfs snapshots can be mounted as partitions, they
+# are perfect for bootable system backups.
+# destination_fstype="btrfs"
 
 # Optional. System command to connect to remote shell. Since only ssh is supported, it should be ssh with any
 # additional arguments if needed, such as port number.
@@ -59,4 +63,21 @@ destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used 
 # It may sound difficult but it is only a hash at /etc/sudoers.
 # remote_sync="rsync"
 # remote_sync="sudo rsync"
+
+
+## Excludes Section
+
+# This section can be anywhere in the file. Starts with EXCLUDE_START, ends with EXCLUDE_STOP and
+# in between a section in the rsync/tar exclude format is expected. Root ( / ) denotes the root directory
+# of the backup (source).
+
+# EXCLUDE_START
+# /tmp/*
+# /var/tmp/*
+# /usr/src/*
+# .gvfs
+# cache-*
+# socket-*
+# tmp-*
+# EXCLUDE_STOP
 
