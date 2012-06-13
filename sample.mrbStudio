@@ -1,0 +1,62 @@
+# Settings are either mandatory or optional.
+# Lines starting with hash are ignored.
+# Order of parameters does not matter.
+# When this file is parsed, it is split to the variables and excludes parts respectively. The variables part
+# is then sourced by mrbStudio. The excludes part is treated as rsync/tar exclude list file.
+
+## Variables Section
+
+# Mandatory. Set the source path of the backups. Can be local or a remote ssh site. A rsync server may work
+# but I haven't tested such a setup.
+# source="/home"
+# source="username@myserver:/home"
+
+# Mandatory. Set the destination path for the parent folder of the backup. Only local.
+# destination_parent="/path/to/backup/medium"
+
+# Mandatory. This it the prefix that will be used for the name of the backup (the backup is a directory at the
+# destination_parent folder). The script will append a datetime variable (of the time of the backup) to this prefix
+# in order to create a unique directory name.
+# So if you choose a prefix like Server-backup and do a backup at 2000 01 01, 00:00, your backup will be named:
+# Server-backup-200001010000.
+# This prefix should be unique in the destination_parent because it is used to identify the backups of this source.
+# So the only Server-backup directories in the destination_parent directory, should be the backups created by
+# mrbStudio for your server.
+# prefix="server-backup"
+
+# Optional. Here you can set a text file which has a list of files/directories that should be excluded from the backup.
+# It is expected to be at the standard rsync (or tar) format for these files. Check the examples for samples of exclude
+# files. Also this can be used in conjunction with the exclude list inside this file which we will show later.
+# exclude_file="/path/to/excluded_list.txt"
+
+# Optional. System command to use to mount the source medium if needed (locally or at remote machine).
+# mount_source_command="mount /dev/sdz1 /mnt/backup"     
+# mount_source_command="ssh username@myserver sudo mount /dev/sdz1 /mnt/backup"
+
+# Optional. System command to unmount the source medium if needed.
+# umount_source_command="umount /mnt/backup"
+# umount_source_command="ssh username@myserver sudo umount /mnt/backup"
+
+# Optional. System command to use to mount the destination medium if needed (locally only).
+# mount_destination_command="mount /dev/sdz2 /mnt/snapshots"
+
+# Optional. System command to use to unmount the destination medium if needed.
+# umount_destination_command="umount /mnt/snapshots"
+
+destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used insted of hard links.
+
+# Optional. System command to connect to remote shell. Since only ssh is supported, it should be ssh with any
+# additional arguments if needed, such as port number.
+# Theoretically it could work with any remote command shell but only ssh is checked and guaranteed to work.
+# remote_shell="ssh"
+# remote_shell="ssh -p 10000"
+
+# Optional. Remote system command for remote rsync. Since you chose to use rsync over ssh, the remote system
+# must have rsync installed too. Here you have to describe how you can run rsync on the remote shell.
+# Important: there is a catch here. If you need to run sudo, then it should be set to be passwordless for the
+# user you use to perform the backups. That is because we can't tunnel a password prompt through rsync.
+# What I do is to login to the remote system, give sudo rights to my backup user, perform the backup, lift the rights.
+# It may sound difficult but it is only a hash at /etc/sudoers.
+# remote_sync="rsync"
+# remote_sync="sudo rsync"
+
