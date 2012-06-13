@@ -82,8 +82,8 @@ clean_before_exit()
 [ ! -f "$1" ] && ( echo "Configuration file not found. Exiting."; exit 1 )
 # Load configuration file. Because conf file may include exclusion list, we can't simply source it.
 temp_source="$(mktemp)"
-sed -n '0,/EXCLUDE_START/ { /EXCLUDE_START/b; p }' "$1" >> "$temp_source"
-sed -n '/EXCLUDE_STOP/,$ { /EXCLUDE_STOP/b; p }' "$1" >> "$temp_source"
+egrep -v "^[[:space:]]*#" "$1" | sed -n '0,/EXCLUDE_START/ { /EXCLUDE_START/b; p }' >> "$temp_source"
+egrep -v "^[[:space:]]*#" "$1" | sed -n '/EXCLUDE_STOP/,$ { /EXCLUDE_STOP/b; p }' >> "$temp_source"
 source "$temp_source"
 rm "$temp_source"
 
@@ -151,7 +151,7 @@ fi
 if [ ! -z "$( sed -n '/EXCLUDE_START/,/EXCLUDE_STOP/ {//!p}' "$1" )" ]; then
   echo "Loading exclusion list from main configuration file."
   exclude_temp_file="$(mktemp)"
-  sed -n '/EXCLUDE_START/,/EXCLUDE_STOP/ {//!p}' "$1" > "$exclude_temp_file"
+  egrep -v "^[[:space:]]*#" "$1" | sed -n '/EXCLUDE_START/,/EXCLUDE_STOP/ {//!p}' > "$exclude_temp_file"
   [ ! -z "$exclude_command" ] && cat "$exclude_file" >> "$exclude_temp_file"
   exclude_command="--exclude-from=$exclude_temp_file"
 else
