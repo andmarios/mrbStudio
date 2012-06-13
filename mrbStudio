@@ -8,7 +8,7 @@
 #
 # A script for versioned backups of both local and remote filesystems.
 # - For the most basic use of local filesystems, it uses rsync with hard links.
-# - For remote sites usage is difficult. Specific setup is needed at both ends. ssh access for remote is required.
+# - For remote sites, usage is more difficult. Specific setup is needed at both ends. Ssh access for remote is required.
 # - When using a btrfs filesystem as the backup medium, snapshots may be used if desired instead of hard links.
 #
 # This script uses input files for setting up backup configurations.

@@ -1,4 +1,5 @@
 mrbStudio - Marios' rsync backup studio
+A script for versioned backups of both local and remote filesystems.
 
 Copyright 2009-2012 Marios Andreopoulos ( opensource at andmarios dot com )
 Distributed under the terms of the GNU General Public License v2
@@ -13,7 +14,8 @@ original idea, rather an implentation of guides I read in the past that turned o
 well.
 
 
-So, what it really does, is to copy the folder you want to backup to the backup directory.
+So, what it really does, is to copy the folder you want to backup to the backup directory (while
+preserving ownerships, attributes, special files, links, etc).
 This happens for the first backup though. For the next backups, it creates a hard link copy or a
 snapshot (if you are using btrfs) of the most recent backup and copies only the changed files.
 This makes the process very quick and the space needed for a new version relatively small. On the
@@ -56,7 +58,7 @@ Essentially it is a wrapper for rsync.
 
 
 Changelog
- Version 3 - 2012, Jun ??:
+ Version 3 - 2012, Jun 13:
      - added btrfs snapshot support
      - replaced cp -l with rsync --link-dest option (much faster for large filesystems)
      - code restructure and clean up in order to release in public
