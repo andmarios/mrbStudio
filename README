@@ -29,9 +29,13 @@ restoring them. It does not do that.
 
 
 Features:
- - Versioned backups of local and remote filesystems (through ssh).
+ - Versioned backups of local and remote filesystems (through ssh) to a local filesystem.
+ - Easy to run once you create your configuration files, no need to postpone your backups again.
  - Hard links or btrfs snapshots are used for backup versions in order to save time and space.
- - Easy way to exclude files.
+ - Easy way to exclude files from backups.
+ - Automatic mounting of local and/or remote filesystems if needed.
+ - Backups are exact copies of the original directories, no special software needed to access them,
+   only a shell.
  - Script is compact and easy to modify. You need an extra feature? You can implement it fast.
 
  
@@ -44,10 +48,10 @@ $ mrbStudio sample.mrbStudio
 mrbStudio does not support removing old backups. You have to do this manually.
 
 
-A last note. mrbStudio isn't rocket science and certainly isn't an advanced bash script. One should
-not play with his backups, they are there to save you from a catastrophe. So, I kept it basic.
-What it really does is to make a bunch of checks to see if your configuration file is sane (you will
-probably run it as root, so you don't want things to go wrong) and then calls rsync.
+A last note; mrbStudio isn't rocket science and certainly isn't an advanced bash script. One should
+not play with his backups, they are there to save you from a catastrophe. So, I intentionally kept it
+basic. What it really does is to make a bunch of checks to see if your configuration file is sane (you
+will probably run it as root, so you don't want things to go wrong) and then calls rsync.
 Essentially it is a wrapper for rsync.
 
 

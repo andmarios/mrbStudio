@@ -192,12 +192,12 @@ fi
 
 # Find the most recent backup to use for cp -l or btrfs snapshot. Variable stays empty if recent doesn't exist.
 recent="$(ls -td "$destination_parent/$prefix"* 2>/dev/null | sort -r | head -n1)"
-recent="${recent//\/\//\/}" # removing potential double slashes, prettifying output.
+recent="${recent//\/\///}" # removing potential double slashes, prettifying output.
 # This will be used to identify the new backup (datetime)
 moment="$(date +%Y.%m.%d.%H%M)"
 # The actual directory of the backup.
 destination="$destination_parent/$prefix-$moment"
-destination="${destination//\/\//\/}"
+destination="${destination//\/\///}"
 
 
 # Check if recent exists and create btrfs snapshot if using btrfs fstype
