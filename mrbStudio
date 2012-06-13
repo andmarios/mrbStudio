@@ -3,7 +3,7 @@
 # mrbStudio - Marios' rsync backup studio
 #
 # Copyright 2009-2012 Marios Andreopoulos ( opensource at andmarios dot com )
-# Distributed under the terms of the GNU General Public License v2
+# Distributed under the terms of the GNU General Public License v3 or later
 #
 #
 # A script for versioned backups of both local and remote filesystems.
@@ -52,7 +52,35 @@ remote_shell=""                #O System command to connect to remote shell (!!!
                                #  Also doubles as remote mode switch. If it isn't empty, the script enters remote mode.
 remote_sync=""                 #O Remote system command for remote rsync (!!!needs more explanation!!!
 destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used insted of hard links.
+program_version="3.00"         #N Internal variable.
 
+
+
+# A basic help and version switch implementation.
+version_info(){
+  cat <<EOF
+mrbStudio, version $program_version
+Copyright (C) 2009-12 Marios Andreopoulos ( opensource at andmarios . com )
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+More information can be found at:
+<http://www.andmarios.com>
+<http://github.com/andmarios/mrbStudio>
+EOF
+}
+help_info(){
+  cat <<EOF
+Usage: mrbStudio [FILE]
+FILE is a mrbStudio configuration style text file.
+Check sample.mrbStudio and the other example files that came with this script.
+EOF
+}
+case "$1" in
+  -v | --version ) version_info; exit;;
+  -h | --help    ) help_info; exit;;
+esac
 
 
 # If for any reason we exit before completion, this function will run to umount mediums and rm temp files)
@@ -75,11 +103,11 @@ clean_before_exit()
 }
 
 
-# Here starts the main body of the script.
+## Here starts the main body of the script.
 
 
 # Check if configuration file exists.
-[ ! -f "$1" ] && ( echo "Configuration file not found. Exiting."; exit 1 )
+[ ! -f "$1" ] && ( echo "Configuration file \'$!\' not found. Try --help if you need to learn more. Exiting."; exit 1 )
 # Load configuration file. Because conf file may include exclusion list, we can't simply source it.
 temp_source="$(mktemp)"
 egrep -v "^[[:space:]]*#" "$1" | sed -n '0,/EXCLUDE_START/ { /EXCLUDE_START/b; p }' >> "$temp_source"
