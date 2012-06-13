@@ -60,7 +60,7 @@ program_version="3.00"         #N Internal variable.
 version_info(){
   cat <<EOF
 mrbStudio, version $program_version
-Copyright (C) 2009-12 Marios Andreopoulos ( opensource at andmarios . com )
+Copyright (C) 2009-12 Marios Andreopoulos ( opensource@andmarios.com )
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -75,6 +75,9 @@ help_info(){
 Usage: mrbStudio [FILE]
 FILE is a mrbStudio configuration style text file.
 Check sample.mrbStudio and the other example files that came with this script.
+
+Report bugs to opensource@andmarios.com
+mrbStudio github <http://github.com/andmarios/mrbStudio>
 EOF
 }
 case "$1" in
@@ -107,7 +110,7 @@ clean_before_exit()
 
 
 # Check if configuration file exists.
-[ ! -f "$1" ] && ( echo "Configuration file \'$!\' not found. Try --help if you need to learn more. Exiting."; exit 1 )
+[ ! -f "$1" ] && { echo "Configuration file \"$1\" not found. Try --help if you need to learn more. Exiting."; exit 1; }
 # Load configuration file. Because conf file may include exclusion list, we can't simply source it.
 temp_source="$(mktemp)"
 egrep -v "^[[:space:]]*#" "$1" | sed -n '0,/EXCLUDE_START/ { /EXCLUDE_START/b; p }' >> "$temp_source"
@@ -143,8 +146,8 @@ fi
 
 
 # Test if destination_parent and prefix are given.
-[ -z "$destination_parent" ] && ( echo "No destination_parent folder given. Exiting."; clean_before_exit; exit 1 )
-[ -z "$prefix" ] && ( echo "No prefix given. Exiting."; clean_before_exit; exit 1 )
+[ -z "$destination_parent" ] && { echo "No destination_parent folder given. Exiting."; clean_before_exit; exit 1; }
+[ -z "$prefix" ] && { echo "No prefix given. Exiting."; clean_before_exit; exit 1; }
 
 
 # Mount destination medium if needed.
@@ -159,7 +162,7 @@ fi
 
 
 # Test if destination parent folder exists
-[ ! -d "$destination_parent" ] && ( echo "Target folder not found. Exiting"; clean_before_exit; exit 1 )
+[ ! -d "$destination_parent" ] && { echo "Target folder not found. Exiting"; clean_before_exit; exit 1; }
 
 
 # Check if an excludes file is given and if it exists, prepare the relevant rsync command section.
