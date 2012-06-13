@@ -83,6 +83,7 @@ clean_before_exit()
 # Load configuration file. Because conf file may include exclusion list, we can't simply source it.
 temp_source="$(mktemp)"
 sed -n '0,/EXCLUDE_START/ { /EXCLUDE_START/b; p }' "$1" >> "$temp_source"
+sed -n '/EXCLUDE_STOP/,$ { /EXCLUDE_STOP/b; p }' "$1" >> "$temp_source"
 source "$temp_source"
 rm "$temp_source"
 
