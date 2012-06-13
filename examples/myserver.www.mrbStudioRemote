@@ -1,6 +1,6 @@
 source="username@myserver:/var/www"
 storage="/media/external_sd/backups/"
 prefix="Server.www"
-remote_shell="ssh -p 10000"
+remote_shell="ssh"
 remote_rsync="sudo rsync"
 destination_fstype=btrfs
