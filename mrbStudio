@@ -21,14 +21,16 @@
 #
 #
 # Changelog
-#  Version 3: added btrfs snapshot support
-#             replaced cp -l with rsync --link-dest option (much faster for large filesystems)
-#             code restructure and clean up
-#             excluded files' list may be inside a main configuration file instead of a seperate file
-#             better documentation
-#             caution: this version changed the names of some variables, so older configuration files may need changes
-#  Version 2: added versioned backup for remote linux systems through ssh/rsync
-#  Version 1: versioned backup of local fileystems
+#  Version 3.01: fixed bug where script didn't create btrfs subvolume for the first backup of a source if set to btrfs
+#                mode, thus failing to create snapshots for consequent backups.
+#  Version 3.00: added btrfs snapshot support
+#                replaced cp -l with rsync --link-dest option (much faster for large filesystems)
+#                code restructure and clean up
+#                excluded files' list may be inside a main configuration file instead of a seperate file
+#                better documentation
+#                caution: this version changed the names of some variables, older configuration files may need changes
+#  Version 2.00: added versioned backup for remote linux systems through ssh/rsync
+#  Version 1.00: versioned backup of local fileystems
 #
 # Notice: this script is written using 120 characters as maximum line width.
 
@@ -52,7 +54,7 @@ remote_shell=""                #O System command to connect to remote shell (!!!
                                #  Also doubles as remote mode switch. If it isn't empty, the script enters remote mode.
 remote_sync=""                 #O Remote system command for remote rsync (!!!needs more explanation!!!
 destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used insted of hard links.
-program_version="3.00"         #N Internal variable.
+program_version="3.01"         #N Internal variable.
 
 
 
@@ -200,11 +202,27 @@ destination="$destination_parent/$prefix-$moment"
 destination="${destination//\/\///}"
 
 
-# Check if recent exists and create btrfs snapshot if using btrfs fstype
+# Check if recent exists and create btrfs snapshot (or subvolume for the 1st backup) if using btrfs fstype.
 if [ -z "$recent" ]; then 
   echo "Did not found another valid backup. Creating new."
+  if [[ "$destination_fstype" == [Bb][Tt][Rr][Ff][Ss] ]]; then
+    echo "Using btrfs snapshots. Creating btrfs subvolume to $prefix-$moment."
+    if ! btrfs subvolume create "$destination" >/dev/null; then
+      echo "Btrfs subvolume creation returned error, exiting. Please check $destination_parent for unwanted directories."
+      clean_before_exit
+    exit 1
+    fi
+  fi
 elif [ ! -d "$recent" ]; then # Probably not needed but it doesn't harm either.
   echo "Did not found another valid backup. Creating new."
+  if [[ "$destination_fstype" == [Bb][Tt][Rr][Ff][Ss] ]]; then
+    echo "Using btrfs snapshots. Creating btrfs subvolume to $prefix-$moment."
+    if ! btrfs subvolume create "$destination" >/dev/null; then
+      echo "Btrfs subvolume creation returned error, exiting. Please check $destination_parent for unwanted directories."
+      clean_before_exit
+    exit 1
+    fi
+  fi
 else
   echo "Most recent backup: $(basename $recent)."
   if [[ "$destination_fstype" == [Bb][Tt][Rr][Ff][Ss] ]]; then
