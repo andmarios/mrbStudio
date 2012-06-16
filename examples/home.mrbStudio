@@ -6,5 +6,5 @@ exclude_file="home.excludes"
 EXCLUDE_START
 /aUsername/torrents/*
 /bUsername/.aMule/*
-.kde/share/apps/nepomuk/*
+*/.kde/share/apps/nepomuk/*
 EXCLUDE_STOP
