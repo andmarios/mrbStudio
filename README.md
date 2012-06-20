@@ -45,10 +45,10 @@ ___
 
 ### Changelog ###
 
-#### v3.01 - 2012, Jun 14 ([browse](http://github.com/andmarios/mrbStudio/tree/3.01), [zip](http://github.com/andmarios/mrbStudio/zipball/3.01), [tar](http://github.com/andmarios/mrbStudio/tarball/3.01))
+#### v3.01 - 2012, Jun 14 ([browse](http://github.com/andmarios/mrbStudio/tree/v3.01), [zip](http://github.com/andmarios/mrbStudio/zipball/v3.01), [tar](http://github.com/andmarios/mrbStudio/tarball/v3.01))
    - bugfix: mrbStudio didn't create a btrfs subvolume on the first run for a btrfs backup configuration
 
-#### v3.0  - 2012, Jun 13 ([browse](http://github.com/andmarios/mrbStudio/tree/3.0), [zip](http://github.com/andmarios/mrbStudio/zipball/3.0), [tar](http://github.com/andmarios/mrbStudio/tarball/3.0))
+#### v3.0  - 2012, Jun 13 ([browse](http://github.com/andmarios/mrbStudio/tree/v3.0), [zip](http://github.com/andmarios/mrbStudio/zipball/v3.0), [tar](http://github.com/andmarios/mrbStudio/tarball/v3.0))
    - added btrfs snapshot support
    - replaced cp -l with rsync --link-dest option (much faster for large filesystems)
    - code restructure and clean up in order to release in public
@@ -56,8 +56,8 @@ ___
    - better documentation
    - caution: this version changed the names of some variables, so older configuration files may need changes
 
-#### v2.0  - 2012, Jan 12 ([browse](http://github.com/andmarios/mrbStudio/tree/2.0), [zip](http://github.com/andmarios/mrbStudio/zipball/2.0), [tar](http://github.com/andmarios/mrbStudio/tarball/2.0))
+#### v2.0  - 2012, Jan 12 ([browse](http://github.com/andmarios/mrbStudio/tree/v2.0), [zip](http://github.com/andmarios/mrbStudio/zipball/v2.0), [tar](http://github.com/andmarios/mrbStudio/tarball/v2.0))
    - added versioned backup for remote linux systems through ssh and rsync
 
-#### v1.0  - 2009, Jun 30 ([browse](http://github.com/andmarios/mrbStudio/tree/1.0), [zip](http://github.com/andmarios/mrbStudio/zipball/1.0), [tar](http://github.com/andmarios/mrbStudio/tarball/1.0))
+#### v1.0  - 2009, Jun 30 ([browse](http://github.com/andmarios/mrbStudio/tree/v1.0), [zip](http://github.com/andmarios/mrbStudio/zipball/v1.0), [tar](http://github.com/andmarios/mrbStudio/tarball/v1.0))
    - versioned backup of local fileystems
