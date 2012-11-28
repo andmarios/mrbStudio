@@ -124,7 +124,7 @@ if [[ "$ACTION" == s ]]; then
     unlock_mysql_non_lvm
     exit 1
 # Inform that since the user didn't use LVM, now MySQL has to stay locked.
-  elif [ -z "$LVM_SNAPSHOT" ]; then
+  elif [ -z "$LVM_SNAPSHOT" ] && [ -n "$MYSQL_PASS" ]; then
     echo "Remote: Remember, MySQL will remain locked until you umount target."
   fi
 
