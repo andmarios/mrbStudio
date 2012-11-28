@@ -124,7 +124,7 @@ rm "$temp_source"
 # Check if source needs to be mounted and mount it.
 if [ ! -z "$mount_source_command" ]; then
   echo "Mounting source."
-  if ! $mount_source_command >/dev/null 2>&1; then
+  if ! $mount_source_command >/dev/null; then
     echo "Mount returned error. Exiting. (maybe it was already mounted?)"
   exit 1
   fi
@@ -155,7 +155,7 @@ fi
 # Mount destination medium if needed.
 if [ ! -z "$mount_destination_command" ]; then
   echo "Mounting destination_parent."
-  if ! $mount_destination_command >/dev/null 2>&1; then 
+  if ! $mount_destination_command >/dev/null; then
     echo "Mount returned error. Exiting. (maybe it was already mounted?)"
     clean_before_exit
   exit 1
