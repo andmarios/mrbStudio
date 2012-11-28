@@ -97,13 +97,13 @@ clean_before_exit()
   # Umount source medium if needed.
   if [ ! -z "$umount_source_command" ]; then
     echo "Umounting source."
-    $umount_source_command >/dev/null 2>&1 || echo "Umount source returned error."
+    $umount_source_command || echo "Umount source returned error."
   fi
 
   # Umount destination medium if needed.
   if [ ! -z "$umount_destination_command" ]; then
     echo "Umounting destination_parent."
-    $umount_destination_command >/dev/null 2>&1 || echo "Umount destination_parent returned error. (may not a problem)"
+    $umount_destination_command || echo "Umount destination_parent returned error. (may not a problem)"
   fi
 }
 
@@ -124,7 +124,7 @@ rm "$temp_source"
 # Check if source needs to be mounted and mount it.
 if [ ! -z "$mount_source_command" ]; then
   echo "Mounting source."
-  if ! $mount_source_command >/dev/null; then
+  if ! $mount_source_command; then
     echo "Mount returned error. Exiting. (maybe it was already mounted?)"
   exit 1
   fi
@@ -155,7 +155,7 @@ fi
 # Mount destination medium if needed.
 if [ ! -z "$mount_destination_command" ]; then
   echo "Mounting destination_parent."
-  if ! $mount_destination_command >/dev/null; then
+  if ! $mount_destination_command; then
     echo "Mount returned error. Exiting. (maybe it was already mounted?)"
     clean_before_exit
   exit 1
