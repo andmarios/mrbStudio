@@ -34,26 +34,29 @@ OPTIONS:
    -k      umount source from target and remove snapshot / unlock database if not using LVM
 
 Examples:
-$0 -m "$(cat /path/to/pass)" -p /dev/vg-1/partition -l backup -t /mnt/backups -s
-$0 -m "$(cat /path/to/pass)" -p /dev/vg-1/partition -l backup -t /mnt/backups -k
-
+$0 -m "\$(cat /path/to/passfile)" -p /dev/vg-1/partition -l backup -t /mnt/backups -s
+$0 -m "password" -p /dev/vg-1/partition -l backup -t /mnt/backups -k
+$0 -m "password" -p /dev/sdXY -t /mnt/backups -k
 EOF
 }
 
 # helper functions for code that is used frequently
 unlock_mysql_lvm(){
-  if [ -n "$MYSQL_PASS" ] && echo "unlock tables;" | mysql -uroot -p"${MYSQL_PASS}"; then
-    echo "Remote: MySQL unlocked."
-  else
-    echo "Remote: ERROR! Failed to unlock MySQL. Please do it manually."
+  if [ -n "$MYSQL_PASS" ]; then
+    if echo "unlock tables;" | mysql -uroot -p"${MYSQL_PASS}"; then
+      echo "Remote: MySQL unlocked." 
+    else
+      echo "Remote: ERROR! Failed to unlock MySQL. Please do it manually."
+    fi
   fi
 }
 unlock_mysql_non_lvm(){
-  if [ -n "$MYSQL_PASS" ] && [ -z "$LVM_SNAPSHOT" ] && \
-    echo "unlock tables;" | mysql -uroot -p"${MYSQL_PASS}"; then
-    echo "Remote: MySQL unlocked."
-  else
-    echo "Remote: ERROR! Failed to unlock MySQL. Please do it manually."
+  if [ -n "$MYSQL_PASS" ] && [ -z "$LVM_SNAPSHOT" ]; then
+    if echo "unlock tables;" | mysql -uroot -p"${MYSQL_PASS}"; then
+      echo "Remote: MySQL unlocked."
+    else
+      echo "Remote: ERROR! Failed to unlock MySQL. Please do it manually."
+    fi
   fi
 }
 
