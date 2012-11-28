@@ -14,6 +14,7 @@ LVM_SNAPSHOT=""
 SOURCE=""
 TARGET=""
 ACTION=""
+LVM_PAD="pUn3tanE"
 
 help(){
 cat << EOF
@@ -79,9 +80,9 @@ done
 if ! [ -b "$SOURCE" ]; then
   echo "Remote: Source not found. Exiting."
   exit 1
-elif [ -n "$LVM_SNAPSHOT" ] && lvs | grep -sq "$(basename "$LVM_SNAPSHOT")"; then
-  echo "Remote: a LVM snapshot with the same name exists. Aborting."
-  exit 1
+#elif [ -n "$LVM_SNAPSHOT" ] && lvs | grep -sq "$(basename "$LVM_SNAPSHOT")"; then
+#  echo "Remote: a LVM snapshot with the same name exists. Aborting."
+#  exit 1
 elif [ ! -d "$TARGET" ]; then
   echo "Remote: target directory does not exist. Aborting."
   exit 1
@@ -104,7 +105,7 @@ if [[ "$ACTION" == s ]]; then
   if [ -n "$LVM_SNAPSHOT" ]; then
     echo "Remote: Creating LVM snapshot."
 #   if you fail to create snapshot
-    if ! lvcreate -s -L1G -n "$(basename "$LVM_SNAPSHOT")" "$SOURCE"; then
+    if ! lvcreate -s -L1G -n "$(basename "$LVM_SNAPSHOT")-$LVM_PAD" "$SOURCE"; then
       echo "Remote: could not create LVM snapshot. Aborting."
       unlock_mysql_lvm
       exit 1
@@ -115,7 +116,7 @@ if [[ "$ACTION" == s ]]; then
   fi
 
 # mount source/snapshot to target
-  [ -n "$LVM_SNAPSHOT" ] && SOURCE="$(dirname "$SOURCE")/$(basename "$LVM_SNAPSHOT")"
+  [ -n "$LVM_SNAPSHOT" ] && SOURCE="$(dirname "$SOURCE")/$(basename "$LVM_SNAPSHOT")-$LVM_PAD"
   echo "Remote: mounting target."
 # if you fail to mount target, unlock MySQL and exit
   if ! mount "$SOURCE" "$TARGET"; then
@@ -130,7 +131,7 @@ if [[ "$ACTION" == s ]]; then
 # umount target, etc
 elif [[ "$ACTION" == k ]]; then
 # umount target
-  [ -n "$LVM_SNAPSHOT" ] && SOURCE="$(dirname "$SOURCE")/$(basename "$LVM_SNAPSHOT")"
+  [ -n "$LVM_SNAPSHOT" ] && SOURCE_SNAPSHOT="$(dirname "$SOURCE")/$(basename "$LVM_SNAPSHOT")-$LVM_PAD"
   echo "Remote: umounting target."
 # if you fail to mount target, unlock MySQL and exit
   if ! umount "$TARGET"; then
@@ -140,7 +141,7 @@ elif [[ "$ACTION" == k ]]; then
 # remove LVM snapshot.
   elif [ -n "$LVM_SNAPSHOT" ]; then
     echo "Remote: removing LVM snapshot."
-    if ! lvremove "$SOURCE"; then
+    if ! lvremove -f "$SOURCE_SNAPSHOT"; then
       echo "Remote: failed to remove LVM snapshot. Aborting."
       unlock_mysql_non_lvm
       exit 1
