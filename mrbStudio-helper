@@ -104,7 +104,7 @@ if [[ "$ACTION" == s ]]; then
   if [ -n "$LVM_SNAPSHOT" ]; then
     echo "Remote: Creating LVM snapshot."
 #   if you fail to create snapshot
-    if ! lvcreate --snapshot –-size=1G --name="$(basename "$LVM_SNAPSHOT")" "$SOURCE"; then
+    if ! lvcreate -s -L1G -n "$(basename "$LVM_SNAPSHOT")" "$SOURCE"; then
       echo "Remote: could not create LVM snapshot. Aborting."
       unlock_mysql_lvm
       exit 1
