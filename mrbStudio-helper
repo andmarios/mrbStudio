@@ -76,7 +76,7 @@ do
 done
 
 # some sanity checks, probably not all
-if ! [ -d "$SOURCE" ]; then
+if ! [ -f "$SOURCE" ]; then
   echo "Remote: Source not found. Exiting."
   exit 1
 elif [ -n "$LVM_SNAPSHOT" ] && lvs | grep -sq "$(basename "$LVM_SNAPSHOT")"; then
