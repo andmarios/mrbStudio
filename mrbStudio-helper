@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# mrbStudio-helper
+#
+# Copyright 2009-2012 Marios Andreopoulos ( opensource at andmarios dot com )
+# Distributed under the terms of the GNU General Public License v3 or later
+#
+#
+# A helper script for mrbStudio that you run as the mount command.
+# It purpose is to support LVM snapshots and MySQL table locking.
+# This script should be uploaded to the remote machine.
+
+MYSQL_PASS=""
+LVM_SNAPSHOT=""
+SOURCE=""
+TARGET=""
+ACTION=""
+
+help(){
+cat << EOF
+usage: $0 options
+
+A helper script for mrbStudio that you run as the mount command.
+It purpose is to support LVM snapshots and MySQL table locking.
+This script should be uploaded to the remote machine.
+
+OPTIONS:
+   -h      Show this message
+   -m      mysql root password if you want database locking (optional)
+   -p      partition to backup
+   -l      lvm snapshot name (if you want to create one)
+   -t      target directory to mount source
+   -s      mount source to target and create snapshot / lock database
+           if you use LVM, the database will stay locked only while we create the snapshot
+   -k      umount source from target and remove snapshot / unlock database if not using LVM
+EOF
+}
+
+while getopts “hm:p:l:t:sk” OPTION
+do
+  case $OPTION in
+    h) help; exit 1;;
+    m) MYSQL_PASS="$OPTARG";;
+    p) SOURCE="$OPTARG";;
+    l) LVM_SNAPSHOT="$OPTARG";;
+    t) TARGET="$OPTARG";;
+    s) ACTION="s";;
+    k) ACTION="k";;
+    ?) help; exit ;;
+  esac
+done
+
+
+if [ -z "$MYSQL_PASS" ]; then
+  echo "Remote: No MySQL password given, feature disabled."
+fi
+
+if ! [ -d "$SOURCE" ]; then
+  echo "Remote: Source not found. Exiting."
+  exit 1
+elif [ -n "$LVM_SNAPSHOT" ] && lvs | grep -sq "$(basename "$LVM_SNAPSHOT")"; then
+  echo "Remote: a LVM snapshot with the same name exists. Aborting."
+  exit 1
+elif [ ! -d "$TARGET" ]; then
+  echo "Remote: target directory does not exist. Aborting."
+  exit 1
+fi
+
+
+if [[ "$ACTION" == s ]]; then
+  echo "Remote: mounting"
+elif [[ "$ACTION" == k ]]; then
+  echo "Remote: umounting."
+fi
