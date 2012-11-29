@@ -67,6 +67,7 @@ ___
    - removed some redirections of stdout and/or stderr to /dev/null, in order to make it easier to catch the cause of errors
 
 mrbStudio-helper specific:
+
    - mount/umount remote block device
    - create/remove LVM snapshot for remote block device
    - lock/unlock MySQL on remote system (unlock immediately if on LVM, after sync if not)
