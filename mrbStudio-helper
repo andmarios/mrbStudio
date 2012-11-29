@@ -18,7 +18,9 @@ LVM_PAD="pUn3tanE"
 
 help(){
 cat << EOF
-usage: $0 options
+mrbStudio-helper script v4.00
+
+usage: $0 options [-s|-k]
 
 A helper script for mrbStudio that you run as the mount command.
 It purpose is to support LVM snapshots and MySQL table locking.

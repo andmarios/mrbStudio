@@ -19,8 +19,11 @@
 # - System commands are run a lot (mount, rsync, etc) and probably under superuser permissions. Keep failure points low.
 # - A small script is easy for anyone to extend with the functionality he needs.
 #
-#
 # Changelog
+#  Version 4.00: fixed bug where when no excludes, rsync would go rogue
+#                added mrbStudio-helper, main reason for such great bump
+#                removed some redirections of stdout and/or stderr to /dev/null, in order to make it easier to catch
+#                the cause of errors
 #  Version 3.01: fixed bug where script didn't create btrfs subvolume for the first backup of a source if set to btrfs
 #                mode, thus failing to create snapshots for consequent backups.
 #  Version 3.00: added btrfs snapshot support
@@ -54,7 +57,7 @@ remote_shell=""                #O System command to connect to remote shell (!!!
                                #  Also doubles as remote mode switch. If it isn't empty, the script enters remote mode.
 remote_sync=""                 #O Remote system command for remote rsync (!!!needs more explanation!!!
 destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used insted of hard links.
-program_version="3.01"         #N Internal variable.
+program_version="4.00"         #N Internal variable.
 
 
 
