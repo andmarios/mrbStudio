@@ -1,0 +1,8 @@
+source="username@myserver:/mnt/backup"
+storage="/media/external_sd/backups/"
+prefix="Server.www"
+mount_source_command="ssh username@myserver sudo mrbStudio-helper -m \"$(cat /path/to/mysql/passwordfile)\" -p /dev/vg-1/www -l snap -t /mnt/backup/ -s"
+umount_source_command="ssh username@myserver sudo mrbStudio-helper -p /dev/vg-1/www -l snap -t /mnt/backup/ -k"
+remote_shell="ssh"
+remote_rsync="sudo rsync"
+destination_fstype=btrfs
