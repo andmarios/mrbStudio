@@ -240,10 +240,8 @@ fi
 
 # Create backup.
 echo "Rsyncing to $destination."
-# To prevent a funny bug. If exclude_command is empty, the rsync syncs... I do not know what.
-# If I run the command manually it runs ok, only within mrbStudio script this command fails.
-# So, if exclude_command is empty, give it something to exclude.
-[ -z "$exclude_command" ] && exclude_command="--exclude vaDeapE3kNag3ZooCUbaCaRaDye96sOhMure56SUkuEvEbaWimaM6YeekisT4wOy"
+# To prevent a bug, we have to seperate the exclude_command if empty, or create an empty exclude file.
+[ -z "$exclude_command" ] && exclude_temp_file="$(mktemp)" && exclude_command="--exclude-from=$exclude_temp_file"
 if [ -z "$remote_shell" ]; then
   echo "Local mode."
   if [[ "$destination_fstype" == [Bb][Tt][Rr][Ff][Ss] ]]; then
@@ -255,7 +253,7 @@ else
   echo "Remote mode."
   if [[ "$destination_fstype" == [Bb][Tt][Rr][Ff][Ss] ]]; then
     rsync -a --stats -h -z -e "$remote_shell" --rsync-path="$remote_rsync" \
-      --delete --delete-excluded "$exclude_command" "$source/" "$destination/"
+      --delete --delete-excluded $exclude_command "$source/" "$destination/"
   else
     rsync -a --stats -h -z -e "$remote_shell" --rsync-path="$remote_rsync" --link-dest="$recent" \
       --delete --delete-excluded "$exclude_command" "$source/" "$destination/"
