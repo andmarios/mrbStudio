@@ -2,7 +2,7 @@
 
 # mrbStudio-helper
 #
-# Copyright 2012 Marios Andreopoulos ( opensource at andmarios dot com )
+# Copyright 2013 Marios Andreopoulos ( opensource at andmarios dot com )
 # Distributed under the terms of the GNU General Public License v3 or later
 #
 # A helper script for mrbStudio that you run as the mount command.
@@ -18,7 +18,7 @@ LVM_PAD="pUn3tanE"
 
 help(){
 cat << EOF
-mrbStudio-helper script v4.00
+mrbStudio-helper script v4.10
 
 usage: $0 options [-s|-k]
 

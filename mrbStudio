@@ -2,7 +2,7 @@
 
 # mrbStudio - Marios' rsync backup studio
 #
-# Copyright 2009-2012 Marios Andreopoulos ( opensource at andmarios dot com )
+# Copyright 2009-2013 Marios Andreopoulos ( opensource at andmarios dot com )
 # Distributed under the terms of the GNU General Public License v3 or later
 #
 #
@@ -20,6 +20,7 @@
 # - A small script is easy for anyone to extend with the functionality he needs.
 #
 # Changelog
+#  Version 4.10: fixed bug of mrbStudio-helper (it didn't kept MySQL locked during lvm snapshotting)
 #  Version 4.00: fixed bug where when no excludes, rsync would go rogue
 #                added mrbStudio-helper, main reason for such great bump
 #                removed some redirections of stdout and/or stderr to /dev/null, in order to make it easier to catch
@@ -57,7 +58,7 @@ remote_shell=""                #O System command to connect to remote shell (!!!
                                #  Also doubles as remote mode switch. If it isn't empty, the script enters remote mode.
 remote_sync=""                 #O Remote system command for remote rsync (!!!needs more explanation!!!
 destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used insted of hard links.
-program_version="4.00"         #N Internal variable.
+program_version="4.10"         #N Internal variable.
 
 
 

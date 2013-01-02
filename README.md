@@ -1,7 +1,7 @@
 # mrbStudio - Marios' rsync backup studio #
 _A script for versioned backups of both local and remote filesystems._
 
-Copyright 2009-2012 Marios Andreopoulos ( opensource at andmarios dot com )
+Copyright 2009-2013 Marios Andreopoulos ( opensource at andmarios dot com )
 
 Distributed under the terms of the GNU General Public License v2
 ___
@@ -60,6 +60,12 @@ ___
 
 
 ## Changelog ##
+
+### v4.10 - 2013, Jan 02 ([browse](http://github.com/andmarios/mrbStudio/tree/v4.10), [zip](http://github.com/andmarios/mrbStudio/zipball/v4.10), [tar](http://github.com/andmarios/mrbStudio/tarball/v4.10))
+mrbStudio-helper specific:
+
+   - fixed bug of MySQL not staying locked during LVM snapshotting
+   - dropped support for locking MySQL on non LVM-snapshot based backups (never worked as it turned out)
 
 ### v4.00 - 2012, Nov 29 ([browse](http://github.com/andmarios/mrbStudio/tree/v4.00), [zip](http://github.com/andmarios/mrbStudio/zipball/v4.00), [tar](http://github.com/andmarios/mrbStudio/tarball/v4.00))
    - bugfix: fixed bug where when no excludes, rsync would go rogue
