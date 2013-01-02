@@ -91,7 +91,7 @@ elif [ ! -d "$TARGET" ]; then
 fi
 if [ -n "$MYSQL_PASS" ] && [ -z "$LVM_SNAPSHOT" ]; then
   echo "Remote: MySQL locking can be used only in conjuction with LVM snapshots. Ignoring."
-
+fi
 
 # mount target, etc
 if [[ "$ACTION" == s ]]; then
