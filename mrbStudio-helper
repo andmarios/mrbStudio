@@ -121,8 +121,7 @@ if [[ "$ACTION" == s ]]; then
 #   if you fail to create snapshot
     if ! echo "FLUSH TABLES WITH READ LOCK; \
                system lvcreate -s -L1G -n \"$(basename "$LVM_SNAPSHOT")-$LVM_PAD\" \"$SOURCE\"; \
-               UNLOCK TABLES; \
-               quit;" | mysql -uroot -p"${MYSQL_PASS}"; then
+               UNLOCK TABLES;" | mysql -uroot -p"${MYSQL_PASS}"; then
       echo "Remote: could not lock MySQL and/or create LVM snapshot. Aborting."
       exit 1
     else
