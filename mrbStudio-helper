@@ -32,36 +32,16 @@ OPTIONS:
    -p      partition to backup (if LVM, then /dev/VGNAME/LVNAME)
    -l      lvm snapshot name (do not give a path)
    -t      target directory to mount source
-   -s      mount source to target and create snapshot / lock database
-           if you use LVM, the database will stay locked only while we create the snapshot
-   -k      umount source from target and remove snapshot / unlock database if not using LVM
+   -s      mount source to target and create snapshot if you use LVM
+   -k      umount source from target and remove snapshot
 
 Examples:
 $0 -m "\$(cat /path/to/passfile)" -p /dev/vg-1/partition -l backup -t /mnt/backups -s
-$0 -m "password" -p /dev/vg-1/partition -l backup -t /mnt/backups -k
-$0 -m "password" -p /dev/sdXY -t /mnt/backups -k
+$0 -p /dev/vg-1/partition -l backup -t /mnt/backups -k
+$0 -p /dev/sdXY -t /mnt/backups -k
 EOF
 }
 
-# # helper functions for code that is used frequently
-# unlock_mysql_lvm(){
-#   if [ -n "$MYSQL_PASS" ]; then
-#     if echo "unlock tables;" | mysql -uroot -p"${MYSQL_PASS}"; then
-#       echo "Remote: MySQL unlocked." 
-#     else
-#       echo "Remote: ERROR! Failed to unlock MySQL. Please do it manually."
-#     fi
-#   fi
-# }
-# unlock_mysql_non_lvm(){
-#   if [ -n "$MYSQL_PASS" ] && [ -z "$LVM_SNAPSHOT" ]; then
-#     if echo "unlock tables;" | mysql -uroot -p"${MYSQL_PASS}"; then
-#       echo "Remote: MySQL unlocked."
-#     else
-#       echo "Remote: ERROR! Failed to unlock MySQL. Please do it manually."
-#     fi
-#   fi
-# }
 
 # parse input
 while getopts “hm:p:l:t:sk” OPTION
@@ -78,6 +58,7 @@ do
   esac
 done
 
+
 # some sanity checks, probably not all
 if ! [ -b "$SOURCE" ]; then
   echo "Remote: Source not found. Exiting."
@@ -93,18 +74,9 @@ if [ -n "$MYSQL_PASS" ] && [ -z "$LVM_SNAPSHOT" ]; then
   echo "Remote: MySQL locking can be used only in conjuction with LVM snapshots. Ignoring."
 fi
 
+
 # mount target, etc
 if [[ "$ACTION" == s ]]; then
-
-# # lock MySQL
-#   if [ -n "$MYSQL_PASS" ]; then
-#     echo "Remote: Locking MySQL."
-#     if ! echo "flush tables with read lock; flush logs;" | mysql -uroot -p"${MYSQL_PASS}"; then
-#       echo "Remote: MySQL lock failed. Aborting."
-#       exit 1
-#     fi
-#   fi
-
 # Create LVM snapshot if no MYSQL locking is needed.
   if [ -n "$LVM_SNAPSHOT" ] && [ -z "$MYSQL_PASS" ]; then
     echo "Remote: Creating LVM snapshot."
@@ -114,6 +86,7 @@ if [[ "$ACTION" == s ]]; then
       exit 1
     fi
   fi
+
 
 # Lock MySQL, create LVM snapshot and unlock MySQL.
   if [ -n "$LVM_SNAPSHOT" ]; then
@@ -129,39 +102,32 @@ if [[ "$ACTION" == s ]]; then
     fi
   fi
 
+
 # mount source/snapshot to target
   [ -n "$LVM_SNAPSHOT" ] && SOURCE="$(dirname "$SOURCE")/$(basename "$LVM_SNAPSHOT")-$LVM_PAD"
   echo "Remote: mounting target."
-# if you fail to mount target, unlock MySQL and exit
+# if you fail to mount target exit
   if ! mount "$SOURCE" "$TARGET"; then
     echo "Remote: Failed to mount target. Aborting."
-#    unlock_mysql_non_lvm
     exit 1
-# # Inform that since the user didn't use LVM, now MySQL has to stay locked.
-#   elif [ -z "$LVM_SNAPSHOT" ] && [ -n "$MYSQL_PASS" ]; then
-#     echo "Remote: Remember, MySQL will remain locked until you umount target."
   fi
+
 
 # umount target, etc
 elif [[ "$ACTION" == k ]]; then
 # umount target
   [ -n "$LVM_SNAPSHOT" ] && SOURCE_SNAPSHOT="$(dirname "$SOURCE")/$(basename "$LVM_SNAPSHOT")-$LVM_PAD"
   echo "Remote: umounting target."
-# if you fail to mount target, unlock MySQL and exit
+# if you fail to mount target exit
   if ! umount "$TARGET"; then
     echo "Remote: Failed to umount target. Aborting."
-#    unlock_mysql_non_lvm
     exit 1
 # remove LVM snapshot.
   elif [ -n "$LVM_SNAPSHOT" ]; then
     echo "Remote: removing LVM snapshot."
     if ! lvremove -f "$SOURCE_SNAPSHOT"; then
       echo "Remote: failed to remove LVM snapshot. Aborting."
-#      unlock_mysql_non_lvm
       exit 1
     fi
-# # unlock MySQL if needed
-#   else
-#    unlock_mysql_non_lvm  
   fi
 fi
