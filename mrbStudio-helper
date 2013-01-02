@@ -89,7 +89,7 @@ if [[ "$ACTION" == s ]]; then
 
 
 # Lock MySQL, create LVM snapshot and unlock MySQL.
-  if [ -n "$LVM_SNAPSHOT" ]; then
+  if [ -n "$LVM_SNAPSHOT" ] && [ -n "$MYSQL_PASS" ];; then
     echo "Remote: Locking MySQL and creating LVM snapshot."
 #   if you fail to create snapshot
     if ! echo "FLUSH TABLES WITH READ LOCK; \
