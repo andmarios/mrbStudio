@@ -20,6 +20,7 @@
 # - A small script is easy for anyone to extend with the functionality he needs.
 #
 # Changelog
+#  Version 4.11: added some lines to mark start and end of backup, useful when doing many backups at once
 #  Version 4.10: fixed bug of mrbStudio-helper (it didn't kept MySQL locked during lvm snapshotting)
 #  Version 4.00: fixed bug where when no excludes, rsync would go rogue
 #                added mrbStudio-helper, main reason for such great bump
@@ -58,7 +59,8 @@ remote_shell=""                #O System command to connect to remote shell (!!!
                                #  Also doubles as remote mode switch. If it isn't empty, the script enters remote mode.
 remote_sync=""                 #O Remote system command for remote rsync (!!!needs more explanation!!!
 destination_fstype=""          #O If set to btrfs, btrfs snapshots will be used insted of hard links.
-program_version="4.10"         #N Internal variable.
+name=""                        #O A name for the current backup, only for on terminal information.
+program_version="4.11"         #N Internal variable.
 
 
 
@@ -109,6 +111,8 @@ clean_before_exit()
     echo "Umounting destination_parent."
     $umount_destination_command || echo "Umount destination_parent returned error. (may not a problem)"
   fi
+
+  echo -e "========   exiting: ${name}  ========\n"
 }
 
 
@@ -124,12 +128,15 @@ egrep -v "^[[:space:]]*#" "$1" | sed -n '/EXCLUDE_STOP/,$ { /EXCLUDE_STOP/b; p }
 source "$temp_source"
 rm "$temp_source"
 
+[ -z "$name" ] && name="$source"
+echo "========  starting: ${name}  ========"
 
 # Check if source needs to be mounted and mount it.
 if [ ! -z "$mount_source_command" ]; then
   echo "Mounting source."
   if ! $mount_source_command; then
     echo "Mount returned error. Exiting. (maybe it was already mounted?)"
+    clean_before_exit # I put it here only to print the ending line, no cleaning really required yet.
   exit 1
   fi
 fi
